@@ -1,7 +1,9 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -20,7 +22,7 @@ import drawer.DrawCommand;
  * @author mrbob
  *
  */
-public class Main extends JFrame implements ActionListener, MouseMotionListener, WindowListener{
+public class Main extends JFrame implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -46,8 +48,24 @@ public class Main extends JFrame implements ActionListener, MouseMotionListener,
 		super(x_title);
 		
 		// 各種イベントリスナーの設定
-		this.addWindowListener(this);
-		g_canvas.addMouseMotionListener(this);
+		// (WindowsListtenerとMouseMotionListenerはAdapterで必要なメソッドだけ実装)
+		this.addWindowListener(new WindowAdapter() {
+			// ウィンドウを閉じたときの処理
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+				
+			}
+		});
+		g_canvas.addMouseMotionListener(new MouseMotionAdapter() {
+			// マウスをドラッグした時、描画命令を生成し履歴に追加したのち、即実行する
+			@Override
+			public void mouseDragged(MouseEvent x_event) {
+				Command p_cmd = new DrawCommand(g_canvas, x_event.getPoint());
+				g_commandHisotry.append(p_cmd);
+				p_cmd.execute();
+			}
+		});
 		g_clearButton.addActionListener(this);
 		
 		// ボックスの生成
@@ -77,75 +95,6 @@ public class Main extends JFrame implements ActionListener, MouseMotionListener,
 			g_canvas.repaint();
 		}
 	}
-	
-	/**
-	 * MouseMotionListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void mouseMoved(MouseEvent x_event) {}
-	
-	/**
-	 * MouseMotionListenerインタフェースの実装<br>
-	 * マウスをドラッグした時、描画命令を生成し履歴に追加したのち、即実行する
-	 * @Override
-	 */
-	public void mouseDragged(MouseEvent x_event) {
-		Command p_cmd = new DrawCommand(g_canvas, x_event.getPoint());
-		g_commandHisotry.append(p_cmd);
-		p_cmd.execute();
-	}
-
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowOpened(WindowEvent x_event) {}
-
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * ウィンドウの閉じるボタン押下時の処理
-	 * @Override
-	 */
-	public void windowClosing(WindowEvent x_event) {
-		System.exit(0);
-	}
-
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowClosed(WindowEvent x_event) {}
-	
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowIconified(WindowEvent x_event) {}
-	
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowDeiconified(WindowEvent x_event) {}
-
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowActivated(WindowEvent x_event) {}
-
-	/**
-	 * WindowListenerインタフェースの実装<br>
-	 * 処理なし
-	 * @Override
-	 */
-	public void windowDeactivated(WindowEvent x_event) {}
 	
 	public static void main(String[] args) {
 		new Main("Command Pattern Sample");
