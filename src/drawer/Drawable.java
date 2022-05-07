@@ -17,7 +17,13 @@ public interface Drawable {
 	
 	/**
 	 * 描画色設定の抽象メソッド
-	 * @param x_color
+	 * @param x_color 描画色
 	 */
 	public abstract void setColor(Color x_color);
+	
+	/**
+	 * 描画円サイズ設定の抽象メソッド
+	 * @param x_radius 描画円サイズ
+	 */
+	public abstract void setRadius(int x_radius);
 }

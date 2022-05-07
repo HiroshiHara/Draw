@@ -22,6 +22,7 @@ public class ColorCommand implements Command {
 	
 	/**
 	 * コンストラクタ
+	 * @param x_drawable 描画対象
 	 * @param x_color 描画色
 	 */
 	public ColorCommand(Drawable x_drawable, Color x_color) {

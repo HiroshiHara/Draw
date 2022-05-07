@@ -5,17 +5,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import command.Command;
 import command.MacroCommand;
 import drawer.ColorCommand;
 import drawer.DrawCanvas;
 import drawer.DrawCommand;
+import drawer.RadiusCommand;
 
 /**
  * 描画ツールを実行する
@@ -57,6 +61,16 @@ public class Main extends JFrame implements ActionListener {
 	private JButton g_greenButton = new JButton("green");
 	
 	/**
+	 * 描画円サイズ入力フィールド
+	 */
+	private JFormattedTextField g_radiusField = new JFormattedTextField(new DecimalFormat("###"));
+	
+	/**
+	 * 描画円サイズ変更ボタン
+	 */
+	private JButton g_radiusButton = new JButton("Size Change");
+	
+	/**
 	 * 消去ボタン
 	 */
 	private JButton g_clearButton = new JButton("clear");
@@ -86,6 +100,10 @@ public class Main extends JFrame implements ActionListener {
 				p_cmd.execute();
 			}
 		});
+		g_radiusField.setColumns(3);
+		
+		g_radiusField.addActionListener(this);
+		g_radiusButton.addActionListener(this);
 		g_redButton.addActionListener(this);
 		g_blueButton.addActionListener(this);
 		g_yellowButton.addActionListener(this);
@@ -99,12 +117,17 @@ public class Main extends JFrame implements ActionListener {
 		p_colorButtonBox.add(g_blueButton);
 		p_colorButtonBox.add(g_yellowButton);
 		p_colorButtonBox.add(g_greenButton);
+		// 円サイズ設定配置用の横並びボックス
+		Box p_radiusButtonBox = new Box(BoxLayout.X_AXIS);
+		p_radiusButtonBox.add(g_radiusField);
+		p_radiusButtonBox.add(g_radiusButton);
 		// 消去ボタン配置用の横並びボックス
 		Box p_clearButtonBox = new Box(BoxLayout.X_AXIS);
 		p_clearButtonBox.add(g_clearButton);
 		// 全部品配置用の縦並びボックス
 		Box p_mainBox = new Box(BoxLayout.Y_AXIS);
 		p_mainBox.add(p_colorButtonBox);
+		p_mainBox.add(p_radiusButtonBox);
 		p_mainBox.add(p_clearButtonBox);
 		p_mainBox.add(g_canvas);
 		// コンテナにメインボックスを配置
@@ -124,6 +147,19 @@ public class Main extends JFrame implements ActionListener {
 		if (x_event.getSource() == g_clearButton) {
 			g_commandHisotry.clear();
 			g_canvas.repaint();
+		}
+		// サイズ変更ボタンの時
+		if (x_event.getSource() == g_radiusButton) {
+			String p_text = g_radiusField.getText();
+			if (p_text.isEmpty()) {
+				JFrame p_errFrame = new JFrame();
+				JOptionPane.showMessageDialog(p_errFrame, "整数を入力してください。");
+			} else {
+				int p_radius = Integer.valueOf(p_text);
+				Command p_cmd = new RadiusCommand(g_canvas, p_radius);
+				g_commandHisotry.append(p_cmd);
+				p_cmd.execute();
+			}
 		}
 		// 赤ボタンの時
 		if (x_event.getSource() == g_redButton) {

@@ -80,4 +80,12 @@ public class DrawCanvas extends Canvas implements Drawable {
 	public void setColor(Color x_color) {
 		this.g_color = x_color;
 	}
+	
+	/**
+	 * 描画円サイズ設定処理
+	 * @Override
+	 */
+	public void setRadius(int x_radius) {
+		this.g_radius = x_radius;
+	}
 }
