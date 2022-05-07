@@ -71,6 +71,11 @@ public class Main extends JFrame implements ActionListener {
 	private JButton g_radiusButton = new JButton("Size Change");
 	
 	/**
+	 * アンドゥボタン
+	 */
+	private JButton g_undoButton = new JButton("Undo");
+	
+	/**
 	 * 消去ボタン
 	 */
 	private JButton g_clearButton = new JButton("clear");
@@ -103,6 +108,7 @@ public class Main extends JFrame implements ActionListener {
 		g_radiusField.setColumns(3);
 		
 		g_radiusField.addActionListener(this);
+		g_undoButton.addActionListener(this);
 		g_radiusButton.addActionListener(this);
 		g_redButton.addActionListener(this);
 		g_blueButton.addActionListener(this);
@@ -121,14 +127,15 @@ public class Main extends JFrame implements ActionListener {
 		Box p_radiusButtonBox = new Box(BoxLayout.X_AXIS);
 		p_radiusButtonBox.add(g_radiusField);
 		p_radiusButtonBox.add(g_radiusButton);
-		// 消去ボタン配置用の横並びボックス
-		Box p_clearButtonBox = new Box(BoxLayout.X_AXIS);
-		p_clearButtonBox.add(g_clearButton);
+		// その他ボタン配置用の横並びボックス
+		Box p_otherButtonBox = new Box(BoxLayout.X_AXIS);
+		p_otherButtonBox.add(g_undoButton);
+		p_otherButtonBox.add(g_clearButton);
 		// 全部品配置用の縦並びボックス
 		Box p_mainBox = new Box(BoxLayout.Y_AXIS);
 		p_mainBox.add(p_colorButtonBox);
 		p_mainBox.add(p_radiusButtonBox);
-		p_mainBox.add(p_clearButtonBox);
+		p_mainBox.add(p_otherButtonBox);
 		p_mainBox.add(g_canvas);
 		// コンテナにメインボックスを配置
 		getContentPane().add(p_mainBox);
@@ -143,6 +150,11 @@ public class Main extends JFrame implements ActionListener {
 	 * @Override
 	 */
 	public void actionPerformed(ActionEvent x_event) {
+		// アンドゥボタンの時
+		if (x_event.getSource() == g_undoButton) {
+			g_commandHisotry.undo();
+			g_canvas.repaint();
+		}
 		// クリアボタンの時
 		if (x_event.getSource() == g_clearButton) {
 			g_commandHisotry.clear();
