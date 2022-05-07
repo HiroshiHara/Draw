@@ -18,12 +18,12 @@ public class DrawCanvas extends Canvas implements Drawable {
 	/**
 	 * 描画色
 	 */
-	private Color g_color = Color.red;
+	private Color g_color;
 	
 	/**
 	 * 描画する円の半径
 	 */
-	private int g_radius = 6;
+	private int g_radius;
 	
 	/**
 	 * 命令の履歴
@@ -39,6 +39,18 @@ public class DrawCanvas extends Canvas implements Drawable {
 		// 描画領域の背景色を設定
 		setBackground(Color.white);
 		this.g_commandHistory = x_commandHistory;
+		// 背景色と描画する円の半径を初期化
+		init();
+	}
+	
+	/**
+	 * 背景色と描画する円の半径を初期化<br>
+	 * 背景色設定の初期化命令を履歴に追加する
+	 */
+	public void init() {
+		this.g_color = Color.red;
+		this.g_radius = 6;
+		g_commandHistory.append(new ColorCommand(this, g_color));
 	}
 	
 	/**
@@ -59,5 +71,13 @@ public class DrawCanvas extends Canvas implements Drawable {
 		p_graphics.setColor(g_color);
 		// 円を描画する
 		p_graphics.fillOval(x_positionX - g_radius, x_positionY - g_radius, g_radius * 2, g_radius * 2);
+	}
+	
+	/**
+	 * 描画色設定処理
+	 * @Override
+	 */
+	public void setColor(Color x_color) {
+		this.g_color = x_color;
 	}
 }
